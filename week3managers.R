@@ -1,6 +1,6 @@
 # Enter data into vectors before constructing the data frame
 date_col <- c("2018-15-10", "2018-01-11", "2018-21-10", "2018-28-10", "2018-01-05")
-date_col <- as.Date(date_col,"%y %m %d")
+#date_col <- as.Date(date_col,"%y %m %d")
 date_col
 
 country_col <- c("US", "US", "IRL", "IRL", "IRL")
@@ -57,3 +57,57 @@ managers
 new_data <- subset(managers, Age >= 35 | Age < 24, select = c(Q1, Q2, Q3, Q4) )
 new_data
 str(managers)
+
+
+#calculate the mean for each row
+
+mean_valuw <- rowMeans(managers[5:9])
+
+mean_valuw
+
+managers$Mean_Value <- mean_valuw
+
+managers
+
+#add column names to new rows
+names(managers)[11] <- "Answer Total"
+names(managers)[12] <- "Mean Value"
+
+
+str(managers)
+
+#change date structurefrom factor to date
+#we cant convert a factor to date without converting to a character vector first
+
+date_field <- as.character(managers$Date)
+date_field
+str(date_field)
+
+new_date <- as.Date(date_field, "%Y-%d-%m")
+managers$Date <- new_date
+str(managers)
+
+#working with missig values-------------------------
+
+new_data <- na.omit(managers)
+new_data
+
+complete_data <- complete.cases(managers)
+complete_data
+
+#list all rows that do not have missing values
+complete_data <- managers[complete.cases(managers),]
+
+complete_data
+
+
+#find the sum of all missong values in age categorey
+sum(!is.na(managers$Age))
+
+install.packages("mice")
+library("mice")
+md.pattern(managers)
+
+install.packages("VIM")
+library("VIM")
+missong_values <- aggr(managers,prop = FALSE, numbers = TRUE)
